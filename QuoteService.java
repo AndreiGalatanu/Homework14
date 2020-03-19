@@ -1,21 +1,18 @@
 package ro.fasttrackit.H14;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+import java.util.Random;
 
 public class QuoteService {
     private final List<Quote> quotes;
 
     public QuoteService(List<Quote> quotes) {
-        this.quotes = new ArrayList<>();
+        this.quotes = quotes == null ? new ArrayList<>() : new ArrayList<>(quotes);
     }
 
 
-
-
-    public List<String> getQuotes() {
+    public List<String> getAllQuotes() {
         List<String> result = new ArrayList<>();
         for (Quote quote : quotes) {
             result.add(quote.getQuote());
@@ -24,26 +21,62 @@ public class QuoteService {
         return result;
 
     }
-    public List<String> getQuotesForAuthor(String authorName){
-        List<String> result= new ArrayList<>();
-        for (Quote quote:quotes){
-            if (quote.getAuthor().equals(authorName)){
-                result.add(quote.getQuote());
+
+    public List<Quote> getQuotesForAuthor(String author) {
+        List<Quote> result = new ArrayList<>();
+        for (Quote quote : quotes) {
+            if (quote.getAuthor().equalsIgnoreCase(author.trim())) {
+                result.add(quote);
             }
 
         }
         return result;
     }
 
+
     public List<String> getAuthors() {
-        List<String> result = new ArrayList<>();
-        for (Quote authors : quotes) {
-            result.add(authors.getAuthor());
+        List<String> authors = new ArrayList<>();
+        for (Quote quote : quotes) {
+            authors.add(quote.getAuthor());
         }
-        return result;
+        return authors;
     }
 
-}
+    public void setFavourite(int id) {
+        Quote quote = getById(id);
+        if (quote != null) {
+            quote.setFavorites(true);
+        }
+    }
 
+    public Quote getById(int id) {
+        for (Quote quote : quotes) {
+            if (quote.getId() == id) {
+                return quote;
+            }
+        }
+        return null;
+    }
+
+    public List<Quote> getFavorites() {
+        List<Quote> result = new ArrayList<>();
+        for (Quote quote : quotes) {
+            if (quote.isFavorites()) {
+                result.add(quote);
+            }
+        }
+        return result;
+
+    }
+
+    public Quote getRandomQuote(){
+
+        int randomId=new Random().nextInt(quotes.size());
+        return getById(randomId);
+
+    }
+
+
+}
 
 
